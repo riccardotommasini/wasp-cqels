@@ -22,6 +22,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>maven-restlet</id>
             <name>Restlet repository</name>
             <url>https://maven.restlet.com</url>
@@ -37,18 +41,14 @@
     </repositories>
 
     <dependencies>
+
         <dependency>
-            <groupId>it.polimi.sr.wasp</groupId>
-            <artifactId>core</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>it.polimi.sr.wasp</groupId>
+            <groupId>com.github.riccardotommasini.wasp</groupId>
             <artifactId>rspws</artifactId>
-            <version>1.0</version>
+            <version>0.9.3</version>
         </dependency>
         <dependency>
-            <groupId>it.deib.rsp.vocals</groupId>
+            <groupId>com.github.riccardotommasini.vocals4j</groupId>
             <artifactId>vocals-rdf4j</artifactId>
             <version>1.0</version>
         </dependency>

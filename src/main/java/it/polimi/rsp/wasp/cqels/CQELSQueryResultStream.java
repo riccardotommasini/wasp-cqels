@@ -10,7 +10,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.graph.GraphFactory;
-import it.polimi.sr.wasp.rsp.model.Stream;
+import it.polimi.sr.wasp.rsp.model.StatelessDataChannel;
 import lombok.extern.java.Log;
 import org.deri.cqels.data.Mapping;
 import org.deri.cqels.engine.*;
@@ -21,22 +21,22 @@ import java.util.Iterator;
 import java.util.List;
 
 @Log
-public class CQELSQueryResultStream extends Stream {
+public class CQELSQueryResultStream extends StatelessDataChannel {
     private final OpRouter1 internal_query;
     private final ExecContext context;
 
 
-    public CQELSQueryResultStream(String id, String qid, ExecContext context, ContinuousConstruct int_query) {
-        super(id, qid);
+    public CQELSQueryResultStream(String id, String base, String qid, ExecContext context, ContinuousConstruct int_query) {
+        super(id, base, qid);
         this.context = context;
-        this.internal_query=int_query;
+        this.internal_query = int_query;
         int_query.register(new CQELSConstructListener(context));
     }
 
-    public CQELSQueryResultStream(String id, String qid, ExecContext context, ContinuousSelect int_query) {
-        super(id, qid);
+    public CQELSQueryResultStream(String id, String base, String qid, ExecContext context, ContinuousSelect int_query) {
+        super(id, base, qid);
         this.context = context;
-        this.internal_query=int_query;
+        this.internal_query = int_query;
         int_query.register(new CQELSSelectListener(context));
 
     }
@@ -49,7 +49,7 @@ public class CQELSQueryResultStream extends Stream {
 
         @Override
         public void update(List<Triple> triples) {
-            yeild(serializeTriples(triples));
+            put(serializeTriples(triples));
         }
     }
 
@@ -68,7 +68,7 @@ public class CQELSQueryResultStream extends Stream {
                 Node n = context.engine().decode(mapping.get(vars.next()));
                 nodes.add(n);
             }
-            yeild(serializeNodes(nodes));
+            put(serializeNodes(nodes));
         }
     }
 

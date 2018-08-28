@@ -1,10 +1,10 @@
 package it.polimi.rsp.wasp.cqels;
 
-import it.polimi.sr.wasp.rsp.model.Stream;
+import it.polimi.sr.wasp.rsp.model.StatelessDataChannel;
 
-public class CQELSRDFStream extends Stream {
-    public CQELSRDFStream(String id, String source, CQELSInternalSink cqelsInternalSink) {
-        super(id, source);
-        this.sinks.add(cqelsInternalSink);
+public class CQELSRDFStream extends StatelessDataChannel {
+    public CQELSRDFStream(String id, String source, String base, CQELSInjectTask task) {
+        super(id, source, base);
+        this.asynch_task.add(task);
     }
 }

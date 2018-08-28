@@ -16,19 +16,21 @@ public class CQELSServer extends RSPServer {
     }
 
     public static void main(String[] args) throws IOException {
-        CQELSEngine2 cqels = new CQELSEngine2("cqels", "http://localhost:8181", args[1]);
         if (args.length > 0) {
+            String db = args[1];
+            CQELSEngine2 cqels = new CQELSEngine2("cqels", "http://localhost:8181", db);
             new CQELSServer().start(cqels, args[0]);
             log.info("Running at http://localhost:8181/cqels");
         } else {
-            new CQELSServer().start(cqels, CQELSEngine2.class.getResource("default.properties").getPath());
+            CQELSEngine2 cqels = new CQELSEngine2("cqels", "http://localhost:8181", CQELSEngine2.class.getClassLoader().getResource("CQELS_DB").getPath());
+            new CQELSServer().start(cqels, CQELSEngine2.class.getClassLoader().getResource("default.properties").getPath());
             log.info("Running at http://localhost:8181/cqels");
         }
     }
 
     @Override
-    protected void ingnite(String host, String name, int port) {
-        super.ingnite(host, name, port);
+    protected void ignite(String host, String name, int port) {
+        super.ignite(host, name, port);
         Spark.get(name + "/observers", (request, response) -> StatusManager.sinks.values());
     }
 }

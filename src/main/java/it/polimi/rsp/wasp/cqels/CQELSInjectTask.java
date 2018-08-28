@@ -5,8 +5,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import it.polimi.sr.wasp.server.model.concept.Channel;
-import it.polimi.sr.wasp.server.model.concept.Sink;
-import it.polimi.sr.wasp.server.model.concept.Source;
+import it.polimi.sr.wasp.server.model.concept.tasks.SynchTask;
 import lombok.AllArgsConstructor;
 import org.apache.jena.riot.Lang;
 import org.deri.cqels.engine.RDFStream;
@@ -18,18 +17,8 @@ import java.util.stream.Stream;
 
 
 @AllArgsConstructor
-public class CQELSInternalSink implements Sink {
+public class CQELSInjectTask implements SynchTask {
     private final RDFStream stream;
-
-    @Override
-    public void await(Source source, String s) {
-        deserialize(s).forEach(stream::stream);
-    }
-
-    @Override
-    public void await(Channel channel, String s) {
-        deserialize(s).forEach(stream::stream);
-    }
 
     private static Stream<Triple> deserialize(String s) {
         Model m = ModelFactory.createDefaultModel()
@@ -40,5 +29,26 @@ public class CQELSInternalSink implements Sink {
         while (i.hasNext())
             triples.add(i.nextStatement().asTriple());
         return triples.stream();
+    }
+
+    @Override
+    public String iri() {
+        return stream.getURI();
+    }
+
+    @Override
+    public Channel out() {
+        return null;
+    }
+
+    @Override
+    public Channel[] in() {
+        return new Channel[0];
+    }
+
+    @Override
+    public void await(String s) {
+        deserialize(s).forEach(stream::stream);
+
     }
 }
