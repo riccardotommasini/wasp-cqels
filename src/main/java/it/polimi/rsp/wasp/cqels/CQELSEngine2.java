@@ -1,6 +1,7 @@
 package it.polimi.rsp.wasp.cqels;
 
 import it.polimi.sr.wasp.rsp.RSPEngine;
+import it.polimi.sr.wasp.rsp.SPARQLUtils;
 import it.polimi.sr.wasp.rsp.model.InternalTaskWrapper;
 import it.polimi.sr.wasp.rsp.model.QueryBody;
 import it.polimi.sr.wasp.server.model.concept.Channel;
@@ -22,9 +23,9 @@ public class CQELSEngine2 extends RSPEngine {
     }
 
     @Override
-    protected InternalTaskWrapper handleInternalQuery(String qid, String query, String uri, String source, List<Channel> list) {
+    protected InternalTaskWrapper handleInternalQuery(String qid, String query, String uri, String j, List<Channel> list) {
 
-        if (query.contains("SELECT")) {
+            if (query.contains("SELECT")) {
             ContinuousSelect int_query = context.registerSelect(query);
             CQELSQueryResultStream out = new CQELSQueryResultStream(uri, base, qid, context, int_query);
             CQELSQuery q = new CQELSQuery(qid, base, query, int_query, out, list);
@@ -43,8 +44,10 @@ public class CQELSEngine2 extends RSPEngine {
 
     @Override
     protected String[] extractStreams(QueryBody queryBody) {
-        return new String[0];
+        List<String> strings = SPARQLUtils.extractStreams(queryBody.body);
+        return strings.toArray(new String[strings.size()]);
     }
+
 
 
     @Override
